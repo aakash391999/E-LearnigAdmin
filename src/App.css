@@ -1,38 +1,144 @@
-.App {
-  text-align: center;
+.app-container {
+  display: flex;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.sidebar-open .content {
+  margin-left: 250px; /* Adjust content margin when sidebar is open */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.sidebar-closed .content {
+  margin-left: 80px; /* Adjust content margin when sidebar is closed */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.content {
+  transition: margin-left 0.3s ease;
+  flex-grow: 1;
+  padding: 20px;
+}
+.login-container {
+  display: flex;
+  height: 100vh;
+}
+
+.left-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+}
+
+.left-image img {
+  max-width: 100%;
+  height: auto;
+}
+
+.right-form {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  align-items: center;
+  padding: 40px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.right-form h2 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 5px;
+  background-color: #f1f1f1;
+}
+
+.input-icon {
+  margin-right: 10px;
+  color: #495057;
+}
+
+.form-control {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: none;
+  padding: 10px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.editable {
+  border: 2px solid #ddd;
+  padding: 15px;
+  min-height: 150px;
+  width: 100%;
+  border-radius: 8px;
+  background-color: #fafafa;
+  margin-bottom: 20px;
+  transition: border-color 0.3s ease;
+}
+
+.editable:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.btn-primary {
+  background-color: #007bff;
   color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
 }
 
-.App-link {
-  color: #61dafb;
+.btn-primary:hover {
+  background-color: #0056b3;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.output {
+  border: 2px solid #ddd;
+  padding: 15px;
+  min-height: 100px;
+  width: 100%;
+  border-radius: 8px;
+  background-color: #fafafa;
+  white-space: pre-wrap;
+  margin-top: 20px;
+  word-wrap: break-word;
+}
+
+.copied {
+  color: green;
+  margin-top: 10px;
 }

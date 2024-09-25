@@ -11,3 +11,42 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.course-img {
+  height: 180px;
+  object-fit: cover;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  transition: all 0.3s ease;
+}
+
+.course-card .btn {
+  transition: background-color 0.3s ease;
+}
+
+.course-card .btn:hover {
+  background-color: #007bff !important;
+  color: #fff;
+}
+/* Custom hover effect for form buttons */
+button.btn {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button.btn:hover {
+  background-color: #28a745; /* Hover effect for success button */
+  transform: scale(1.05); /* Slight scale-up on hover */
+}
+
+/* Custom shadow for input fields */
+.form-control {
+  border-radius: 8px;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Subtle focus effect for form inputs */
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}

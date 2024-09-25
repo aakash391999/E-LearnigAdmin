@@ -1,25 +1,60 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import ProtectedRoute from "./Components/ProtectedRoute";
+import Login from "./Components/Login";
+import Dashboard from "./Components/Dashboard";
+import DashboardHome from "./Components/DashboardHome/DashboardHome.js";
+import Profile from "./Components/Profile";
+import Settings from "./Components/Settings";
+import CartScreen from "./Components/CartScreen";
+import Charts from "./Components/Charts";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import AddCourse from "./Components/AddCourseScreen";
+import EditCourse from "./Components/EditCourseScreen";
+import CoursesList from "./Components/CoursesScreen";
 
-function App() {
+const App = () => {
+  const client = new ApolloClient({
+    uri: "http://localhost:4000/",
+    cache: new InMemoryCache(),
+  });
+
+  const isAuth = useSelector((state) => state?.auth?.userData?.token);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <ApolloProvider client={client}>
+      <Routes>
+        <Route
+          path="/login"
+          element={isAuth ? <Navigate to="/dashboard" /> : <Login />}
+        />
+        <Route
+          path="/dashboard"
+          element={<ProtectedRoute element={<Dashboard />} />}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <Route index element={<Navigate to="home" />} />
+          <Route path="home" element={<DashboardHome />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
+          <Route
+            loader={() => console.log("hkeee")}
+            path="CartScreen"
+            element={<CartScreen />}
+          />
+          <Route path="Chart" element={<Charts />} />
+          <Route path="addCourse" element={<AddCourse />} />
+          <Route path="editCourse/:id" element={<EditCourse />} />
+
+          <Route path="CoursesList" element={<CoursesList />} />
+        </Route>
+        <Route
+          path="/"
+          element={<Navigate to={isAuth ? "/dashboard" : "/login"} />}
+        />
+      </Routes>
+    </ApolloProvider>
   );
-}
+};
 
 export default App;
