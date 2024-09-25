@@ -11,6 +11,8 @@ export const UPDATE_COURSE = getApiUrl("admin/courses");
 
 
 
+
+
 // public apis
 export const GET_ALL_STATES =
   "https://countriesnow.space/api/v0.1/countries/states";

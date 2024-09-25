@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Button,
@@ -13,7 +13,9 @@ import {
 import { FaBook, FaEdit, FaTrashAlt, FaPlusCircle } from "react-icons/fa"; // React Icons
 import "./Lessions.module.css"; // Custom CSS for hover effects
 import { Link, Navigate, useParams } from "react-router-dom";
+import { getAllCourses } from "../../services/services";
 
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 // Sample lesson data
 const lessonsList = [
   {
@@ -130,14 +132,46 @@ const lessonsList = [
       "Explore advanced patterns such as render props and higher-order components.",
   },
 ];
+function extractArrayFromString(input) {
+  try {
+    // Sanitize backticks
+    const sanitizedInput = input.replace(/`/g, '');
+
+    // Find the array in the sanitized string
+    const match = sanitizedInput.match(/\[.*?\]/s);
+    if (match) {
+      const jsonString = match[0];
+      console.log("Matched JSON string:", jsonString); // Log the matched string
+      
+      try {
+        const parsedArray = JSON.parse(jsonString);
+        if (Array.isArray(parsedArray)) {
+          return parsedArray;
+        }
+      } catch (error) {
+        console.error("JSON parsing error:", error.message);
+        console.error("Offending JSON string:", jsonString);
+      }
+    }
+  } catch (error) {
+    console.error("Error in extractArrayFromString:", error);
+  }
+  return []; // Return an empty array if not found or if an error occurs
+}
+
+
 
 const Lessions = () => {
   const { id } = useParams();
 
+
+
+  
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState(null);
+  const [courseData, setcourseData] = useState([])
   const [lessons, setLessons] = useState(lessonsList);
 
   // State for edit modal
@@ -190,7 +224,38 @@ const Lessions = () => {
     setNewTitle("");
     setNewDescription(""); // Clear inputs after adding
   };
+  const getCourses = async () => {
+    try {
+      const query=`/${id}`
+      const res = await getAllCourses(query);
+      setcourseData(res)
 
+      const genAI = new GoogleGenerativeAI(
+        "AIzaSyAXmIgk-vryf_SaZ4JxDvZrloz98hW9QRQ"
+      );
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      //
+      const result = await model.generateContent(`Could you provide an array of lessons in ${res.title}, where each lesson contains a title and a description? js array perfect key value pair like   {
+    "title": "Introduction to HTML",
+    "description": "Learn the basic structure of an HTML document, including tags, elements, and attributes."
+  },`);
+
+
+      const extractedArray = extractArrayFromString(result.response.text());
+      setcourseData(extractedArray)
+
+
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getCourses()
+  }, [])
+
+
+  console.log(courseData)
   return (
     <Container className="mt-4">
       {/* Heading and Add Button */}
@@ -207,7 +272,7 @@ const Lessions = () => {
 
       {/* Lesson Cards */}
       <Row>
-        {lessons.map((lesson) => (
+        {courseData.length>0 &&  courseData.map((lesson) => (
           <Col md={6} lg={4} className="mb-4" key={lesson._id}>
             <Card className="lesson-card shadow-sm h-100">
               <Card.Body>

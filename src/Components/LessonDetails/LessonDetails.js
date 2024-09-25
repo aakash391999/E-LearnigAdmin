@@ -16,7 +16,7 @@ const LessonDetails = () => {
     );
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     //
-    const result = await model.generateContent(name);
+    const result = await model.generateContent(`${name} in depth`);
     console.log(result.response.text());
     setdata(result.response.text());
   };
