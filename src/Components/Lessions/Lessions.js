@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import { FaBook, FaEdit, FaTrashAlt, FaPlusCircle } from "react-icons/fa"; // React Icons
 import "./Lessions.module.css"; // Custom CSS for hover effects
+import { Link, Navigate } from "react-router-dom";
 
 // Sample lesson data
 const lessonsList = [
@@ -208,10 +209,12 @@ const Lessions = () => {
           <Col md={6} lg={4} className="mb-4" key={lesson._id}>
             <Card className="lesson-card shadow-sm h-100">
               <Card.Body>
-                <Card.Title>
-                  <FaBook className="me-2 text-primary" />
-                  {lesson.title}
-                </Card.Title>
+                <Link to={`/dashboard/LessonDetails/${lesson.description}`}>
+                  <Card.Title>
+                    <FaBook className="me-2 text-primary" />
+                    {lesson.title}
+                  </Card.Title>
+                </Link>
                 <Card.Text>{lesson.description}</Card.Text>
                 <div className="d-flex justify-content-between">
                   {/* Edit Button with Tooltip */}

@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { FaBookOpen, FaUsers, FaStar, FaClipboardList } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import "./DashboardHome.css"; // Optional external CSS for additional styling
+import { Link } from "react-router-dom";
 
 const DashboardHome = () => {
   const userData = useSelector((state) => state?.auth?.userData);
@@ -14,7 +15,9 @@ const DashboardHome = () => {
         <Col>
           <Card className="bg-light text-dark text-center p-4 shadow-sm border-0">
             <Card.Body>
-              <Card.Title className="fw-bold">Welcome Back, {userData?.user?.name}!</Card.Title>
+              <Card.Title className="fw-bold">
+                Welcome Back, {userData?.user?.name}!
+              </Card.Title>
               <Card.Text>
                 Here’s an overview of your courses and students!
               </Card.Text>
@@ -54,7 +57,9 @@ const DashboardHome = () => {
               <Card.Body>
                 {card.icon}
                 <Card.Title className="fw-bold">{card.title}</Card.Title>
-                <Card.Text className="display-4 fw-bold">{card.value}</Card.Text>
+                <Card.Text className="display-4 fw-bold">
+                  {card.value}
+                </Card.Text>
               </Card.Body>
             </Card>
           </Col>
@@ -92,9 +97,14 @@ const DashboardHome = () => {
                   </li>
                 ))}
                 <li>
-                  <Button variant="outline-primary" className="rounded-pill">
-                    View All Activities
-                  </Button>
+                  <Link
+                    to="/dashboard/ChatBot"
+
+                  >
+                    <Button variant="outline-primary" className="rounded-pill">
+                      View All Activities
+                    </Button>
+                  </Link>
                 </li>
               </ul>
             </Card.Body>

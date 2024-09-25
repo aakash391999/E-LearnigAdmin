@@ -14,6 +14,8 @@ import AddCourse from "./Components/AddCourseScreen";
 import EditCourse from "./Components/EditCourseScreen";
 import CoursesList from "./Components/CoursesScreen/CoursesScreen.js";
 import Lessions from "./Components/Lessions/Lessions.js";
+import ChatBot from "./Components/ChatBot/ChatBot.js";
+import LessonDetails from "./Components/LessonDetails/LessonDetails.js";
 
 const App = () => {
   const client = new ApolloClient({
@@ -46,10 +48,10 @@ const App = () => {
           <Route path="Chart" element={<Charts />} />
           <Route path="addCourse" element={<AddCourse />} />
           <Route path="editCourse/:id" element={<EditCourse />} />
-
           <Route path="CoursesList" element={<CoursesList />} />
           <Route path="Lessions" element={<Lessions />} />
-
+          <Route path="ChatBot" element={<ChatBot />} />
+          <Route path="LessonDetails/:name" element={<LessonDetails />} />
         </Route>
         <Route
           path="/"

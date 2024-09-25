@@ -1,9 +1,20 @@
 import React from "react";
-import { Container, Row, Col, Card, Button, Form, ListGroup } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Form,
+  ListGroup,
+} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaUserEdit, FaKey, FaSignOutAlt } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
+  const userData = useSelector((state) => state?.auth?.userData);
+
   return (
     <Container fluid className="mt-4">
       {/* Profile Header */}
@@ -12,20 +23,22 @@ const Profile = () => {
           <Card className="text-center shadow-sm p-4">
             <Card.Img
               variant="top"
-              src="https://via.placeholder.com/150"
+              src="https://plus.unsplash.com/premium_photo-1669879825881-6d4e4bde67d5?q=80&w=1586&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="User Avatar"
               className="rounded-circle mx-auto mb-3"
               style={{ width: "150px", height: "150px" }}
             />
             <Card.Body>
-              <Card.Title className="display-4">John Doe</Card.Title>
-              <Card.Text className="text-muted">john.doe@example.com</Card.Text>
+              <Card.Title className="display-4">
+                {userData?.user?.name}
+              </Card.Title>
+              <Card.Text className="text-muted">
+                {userData?.user?.email}
+              </Card.Text>
               <Button variant="primary" className="me-2 rounded-pill">
                 <FaUserEdit /> Edit Profile
               </Button>
-              <Button variant="danger" className="rounded-pill">
-                <FaSignOutAlt /> Logout
-              </Button>
+           
             </Card.Body>
           </Card>
         </Col>
@@ -41,10 +54,10 @@ const Profile = () => {
             <Card.Body>
               <ListGroup variant="flush">
                 <ListGroup.Item>
-                  <strong>Full Name:</strong> John Doe
+                  <strong>Full Name:</strong> {userData?.user?.name}
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <strong>Email:</strong> john.doe@example.com
+                  <strong>Email:</strong> {userData?.user?.email}
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <strong>Phone:</strong> (123) 456-7890

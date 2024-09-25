@@ -43,7 +43,7 @@ const CoursesList = () => {
 
       <div className="text-center mb-4">
         <Link
-          to="/add-course"
+          to="/dashboard/addCourse"
           className="btn btn-success shadow-sm add-course-btn"
         >
           <FaPlus className="me-2" /> Add New Course
