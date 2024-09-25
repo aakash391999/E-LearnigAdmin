@@ -12,13 +12,13 @@ const DashboardHome = () => {
     <Container fluid className="mt-4">
       <Row className="mb-4 animate__animated animate__fadeInDown">
         <Col>
-          <Card className="bg-success text-white text-center p-4 shadow-sm">
+          <Card className="bg-light text-dark text-center p-4 shadow-sm border-0">
             <Card.Body>
-              <Card.Title>Welcome Back, {userData?.user?.name}!</Card.Title>
+              <Card.Title className="fw-bold">Welcome Back, {userData?.user?.name}!</Card.Title>
               <Card.Text>
                 Here’s an overview of your courses and students!
               </Card.Text>
-              <Button variant="light" className="rounded-pill">
+              <Button variant="primary" className="rounded-pill shadow-sm">
                 View Course Dashboard
               </Button>
             </Card.Body>
@@ -50,11 +50,11 @@ const DashboardHome = () => {
           },
         ].map((card, index) => (
           <Col md={3} key={index}>
-            <Card className="text-center shadow-sm">
+            <Card className="text-center shadow-sm border-0 rounded">
               <Card.Body>
                 {card.icon}
-                <Card.Title>{card.title}</Card.Title>
-                <Card.Text className="display-4">{card.value}</Card.Text>
+                <Card.Title className="fw-bold">{card.title}</Card.Title>
+                <Card.Text className="display-4 fw-bold">{card.value}</Card.Text>
               </Card.Body>
             </Card>
           </Col>
@@ -63,8 +63,8 @@ const DashboardHome = () => {
 
       <Row className="mb-4 animate__animated animate__fadeInRight">
         <Col md={6}>
-          <Card className="shadow-sm">
-            <Card.Header className="bg-light">
+          <Card className="shadow-sm border-0">
+            <Card.Header className="bg-primary text-white">
               <h5>Recent Activities</h5>
             </Card.Header>
             <Card.Body>
@@ -102,8 +102,8 @@ const DashboardHome = () => {
         </Col>
 
         <Col md={6}>
-          <Card className="shadow-sm animate__animated animate__fadeInUp">
-            <Card.Header className="bg-light">
+          <Card className="shadow-sm border-0">
+            <Card.Header className="bg-primary text-white">
               <h5>Quick Actions</h5>
             </Card.Header>
             <Card.Body className="text-center">
@@ -115,7 +115,7 @@ const DashboardHome = () => {
               ].map((action, index) => (
                 <Button
                   variant={action.variant}
-                  className="m-2 rounded-pill"
+                  className="m-2 rounded-pill shadow-sm"
                   key={index}
                 >
                   {action.label}

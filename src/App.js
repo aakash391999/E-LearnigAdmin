@@ -12,7 +12,8 @@ import Charts from "./Components/Charts";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import AddCourse from "./Components/AddCourseScreen";
 import EditCourse from "./Components/EditCourseScreen";
-import CoursesList from "./Components/CoursesScreen";
+import CoursesList from "./Components/CoursesScreen/CoursesScreen.js";
+import Lessions from "./Components/Lessions/Lessions.js";
 
 const App = () => {
   const client = new ApolloClient({
@@ -47,6 +48,8 @@ const App = () => {
           <Route path="editCourse/:id" element={<EditCourse />} />
 
           <Route path="CoursesList" element={<CoursesList />} />
+          <Route path="Lessions" element={<Lessions />} />
+
         </Route>
         <Route
           path="/"

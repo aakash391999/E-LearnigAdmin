@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from "../redux/store";
+import { logout } from "../redux/authSlice";
 
 const { dispatch, getState } = store;
 
@@ -50,6 +51,7 @@ function apiReq(
         console.log(error);
         console.log(error && error.response, "the error response");
         if (error && error.response && error.response.status === 403) {
+          dispatch(logout());
           clearUserData();
           dispatch({ type: "clearRedux" });
         }
