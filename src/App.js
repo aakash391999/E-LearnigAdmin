@@ -49,7 +49,7 @@ const App = () => {
           <Route path="addCourse" element={<AddCourse />} />
           <Route path="editCourse/:id" element={<EditCourse />} />
           <Route path="CoursesList" element={<CoursesList />} />
-          <Route path="Lessions" element={<Lessions />} />
+          <Route path="Lessions/:id" element={<Lessions />} />
           <Route path="ChatBot" element={<ChatBot />} />
           <Route path="LessonDetails/:name" element={<LessonDetails />} />
         </Route>

@@ -55,9 +55,7 @@ const CoursesList = () => {
           <Col key={course._id} md={6} lg={4} className="mb-4">
             <Card className="shadow-sm h-100 course-card">
               <Card.Img
-                onClick={() =>
-                  navigate(`/dashboard/Lessions?courseId=${course._id}`)
-                }
+                onClick={() => navigate(`/dashboard/Lessions/${course._id}`)}
                 variant="top"
                 src={
                   course.image

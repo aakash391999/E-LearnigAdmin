@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import { FaBook, FaEdit, FaTrashAlt, FaPlusCircle } from "react-icons/fa"; // React Icons
 import "./Lessions.module.css"; // Custom CSS for hover effects
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 
 // Sample lesson data
 const lessonsList = [
@@ -132,6 +132,8 @@ const lessonsList = [
 ];
 
 const Lessions = () => {
+  const { id } = useParams();
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
