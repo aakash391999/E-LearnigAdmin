@@ -8,10 +8,7 @@ export const LOGIN = getApiUrl("login");
 export const ALL_COURSES = getApiUrl("courses");
 export const ADD_COURSE = getApiUrl("admin/courses");
 export const UPDATE_COURSE = getApiUrl("admin/courses");
-
-
-
-
+export const ADD_LESSION = getApiUrl("lessons");
 
 // public apis
 export const GET_ALL_STATES =

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Card,
   Button,
@@ -12,137 +12,23 @@ import {
 } from "react-bootstrap";
 import { FaBook, FaEdit, FaTrashAlt, FaPlusCircle } from "react-icons/fa"; // React Icons
 import "./Lessions.module.css"; // Custom CSS for hover effects
-import { Link, Navigate, useParams } from "react-router-dom";
-import { getAllCourses } from "../../services/services";
-
+import { Link, useParams } from "react-router-dom";
+import { addNewLession, getAllCourses } from "../../services/services";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-// Sample lesson data
-const lessonsList = [
-  {
-    _id: "101",
-    title: "Introduction to React",
-    description: "This lesson covers the basics of React and JSX.",
-  },
-  {
-    _id: "102",
-    title: "Components and Props",
-    description: "Learn how to create components and pass data through props.",
-  },
-  {
-    _id: "103",
-    title: "State and Lifecycle",
-    description: "Understand state management and lifecycle methods in React.",
-  },
-  {
-    _id: "104",
-    title: "Handling Events",
-    description:
-      "Learn how to handle events in React, such as clicks and form submissions.",
-  },
-  {
-    _id: "105",
-    title: "Conditional Rendering",
-    description: "Understand how to render components conditionally in React.",
-  },
-  {
-    _id: "106",
-    title: "Lists and Keys",
-    description:
-      "Learn how to render lists and use keys for optimal performance.",
-  },
-  {
-    _id: "107",
-    title: "Forms in React",
-    description: "Understand how to manage forms and handle form submissions.",
-  },
-  {
-    _id: "108",
-    title: "Lifting State Up",
-    description:
-      "Learn how to share state between components using lifting state up.",
-  },
-  {
-    _id: "109",
-    title: "Composition vs Inheritance",
-    description:
-      "Understand the differences between composition and inheritance in React.",
-  },
-  {
-    _id: "110",
-    title: "React Router",
-    description:
-      "Learn how to manage routing and navigation in your React applications.",
-  },
-  {
-    _id: "111",
-    title: "Hooks Introduction",
-    description:
-      "Get started with Hooks and understand their benefits in React.",
-  },
-  {
-    _id: "112",
-    title: "useState Hook",
-    description: "Learn how to use the useState hook for state management.",
-  },
-  {
-    _id: "113",
-    title: "useEffect Hook",
-    description:
-      "Understand the useEffect hook for side effects in functional components.",
-  },
-  {
-    _id: "114",
-    title: "Custom Hooks",
-    description:
-      "Learn how to create and use custom hooks in your applications.",
-  },
-  {
-    _id: "115",
-    title: "Context API",
-    description: "Understand how to manage global state using the Context API.",
-  },
-  {
-    _id: "116",
-    title: "React Performance Optimization",
-    description:
-      "Learn techniques for optimizing the performance of React applications.",
-  },
-  {
-    _id: "117",
-    title: "Testing React Applications",
-    description:
-      "Get an introduction to testing React components using tools like Jest and React Testing Library.",
-  },
-  {
-    _id: "118",
-    title: "Deploying React Applications",
-    description:
-      "Learn how to deploy your React applications using services like Netlify or Vercel.",
-  },
-  {
-    _id: "119",
-    title: "Integrating with APIs",
-    description:
-      "Understand how to fetch data from APIs and handle responses in React.",
-  },
-  {
-    _id: "120",
-    title: "Advanced Patterns in React",
-    description:
-      "Explore advanced patterns such as render props and higher-order components.",
-  },
-];
+
 function extractArrayFromString(input) {
   try {
     // Sanitize backticks
-    const sanitizedInput = input.replace(/`/g, '');
+    const sanitizedInput = input.replace(/`/g, "");
 
     // Find the array in the sanitized string
     const match = sanitizedInput.match(/\[.*?\]/s);
     if (match) {
       const jsonString = match[0];
       console.log("Matched JSON string:", jsonString); // Log the matched string
-      
+
       try {
         const parsedArray = JSON.parse(jsonString);
         if (Array.isArray(parsedArray)) {
@@ -159,20 +45,16 @@ function extractArrayFromString(input) {
   return []; // Return an empty array if not found or if an error occurs
 }
 
-
-
 const Lessions = () => {
   const { id } = useParams();
 
-
-
-  
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState(null);
-  const [courseData, setcourseData] = useState([])
-  const [lessons, setLessons] = useState(lessonsList);
+  const [courseData, setcourseData] = useState([]);
+
+  const hasFetchedData = useRef(false); // Reference to prevent double fetch
 
   // State for edit modal
   const [editTitle, setEditTitle] = useState("");
@@ -199,63 +81,81 @@ const Lessions = () => {
   };
 
   const confirmDeleteLesson = () => {
-    setLessons(lessons.filter((lesson) => lesson._id !== selectedLesson._id));
+    setcourseData(
+      courseData.filter((lesson) => lesson.id !== selectedLesson.id)
+    );
     setShowDeleteModal(false);
   };
 
   const handleEditSave = () => {
-    const updatedLessons = lessons.map((lesson) =>
-      lesson._id === selectedLesson._id
+    const updatedLessons = courseData.map((lesson) =>
+      lesson.id === selectedLesson.id
         ? { ...lesson, title: editTitle, description: editDescription }
         : lesson
     );
-    setLessons(updatedLessons);
+    setcourseData(updatedLessons);
     setShowEditModal(false);
   };
 
   const handleAddSave = () => {
     const newLesson = {
-      _id: (lessons.length + 1).toString(), // Generating a simple ID
+      _id: (courseData.length + 1).toString(), // Generating a simple ID
       title: newTitle,
       description: newDescription,
     };
-    setLessons([...lessons, newLesson]);
+    setcourseData([...courseData, newLesson]);
     setShowAddModal(false);
     setNewTitle("");
     setNewDescription(""); // Clear inputs after adding
   };
+
   const getCourses = async () => {
     try {
-      const query=`/${id}`
+      const query = `/${id}`;
       const res = await getAllCourses(query);
-      setcourseData(res)
 
       const genAI = new GoogleGenerativeAI(
         "AIzaSyAXmIgk-vryf_SaZ4JxDvZrloz98hW9QRQ"
       );
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      //
-      const result = await model.generateContent(`Could you provide an array of lessons in ${res.title}, where each lesson contains a title and a description? js array perfect key value pair like   {
-    "title": "Introduction to HTML",
-    "description": "Learn the basic structure of an HTML document, including tags, elements, and attributes."
-  },`);
 
+      const result =
+        await model.generateContent(`Could you provide an array of lessons in ${res.title}, where each lesson contains a title and a description? js array perfect key value pair like   {
+          "id":1
+          "title": "Introduction to HTML",
+          "description": "Learn the basic structure of an HTML document, including tags, elements, and attributes."
+        }, please don't skip any single concept`);
 
       const extractedArray = extractArrayFromString(result.response.text());
-      setcourseData(extractedArray)
 
+      setcourseData(extractedArray);
 
-
+      extractedArray.map((item) => {
+        const apiData = {
+          title: item.title,
+          description: item.description,
+          courseId: id,
+        };
+        addNewLession(apiData)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
     } catch (err) {
       console.log(err);
     }
   };
+
   useEffect(() => {
-    getCourses()
-  }, [])
+    if (!hasFetchedData.current) {
+      getCourses();
+      hasFetchedData.current = true;
+    }
+  }, []);
 
-
-  console.log(courseData)
   return (
     <Container className="mt-4">
       {/* Heading and Add Button */}
@@ -272,49 +172,68 @@ const Lessions = () => {
 
       {/* Lesson Cards */}
       <Row>
-        {courseData.length>0 &&  courseData.map((lesson) => (
-          <Col md={6} lg={4} className="mb-4" key={lesson._id}>
-            <Card className="lesson-card shadow-sm h-100">
-              <Card.Body>
-                <Link to={`/dashboard/LessonDetails/${lesson.description}`}>
-                  <Card.Title>
-                    <FaBook className="me-2 text-primary" />
-                    {lesson.title}
-                  </Card.Title>
-                </Link>
-                <Card.Text>{lesson.description}</Card.Text>
-                <div className="d-flex justify-content-between">
-                  {/* Edit Button with Tooltip */}
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={<Tooltip>Edit Lesson</Tooltip>}
-                  >
-                    <Button
-                      variant="outline-primary"
-                      onClick={() => handleEditLesson(lesson)}
-                    >
-                      <FaEdit className="me-2" /> Edit
-                    </Button>
-                  </OverlayTrigger>
+        {courseData.length > 0
+          ? courseData.map((lesson, index) => (
+              <Col md={6} lg={4} className="mb-4" key={lesson.id}>
+                <Card className="lesson-card shadow-sm h-100">
+                  <Card.Body>
+                    <Link to={`/dashboard/LessonDetails/${lesson.description}`}>
+                      <Card.Title>
+                        <FaBook className="me-2 text-primary" />
+                        {lesson.title}
+                      </Card.Title>
+                    </Link>
+                    <Card.Text>{lesson.description}</Card.Text>
+                    <div className="d-flex justify-content-between">
+                      {/* Edit Button with Tooltip */}
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Edit Lesson</Tooltip>}
+                      >
+                        <Button
+                          variant="outline-primary"
+                          onClick={() => handleEditLesson(lesson)}
+                        >
+                          <FaEdit className="me-2" /> Edit
+                        </Button>
+                      </OverlayTrigger>
 
-                  {/* Delete Button with Tooltip */}
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={<Tooltip>Delete Lesson</Tooltip>}
-                  >
-                    <Button
-                      variant="outline-danger"
-                      onClick={() => handleDeleteLesson(lesson)}
-                    >
-                      <FaTrashAlt className="me-2" /> Delete
-                    </Button>
-                  </OverlayTrigger>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
+                      {/* Delete Button with Tooltip */}
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Delete Lesson</Tooltip>}
+                      >
+                        <Button
+                          variant="outline-danger"
+                          onClick={() => handleDeleteLesson(lesson)}
+                        >
+                          <FaTrashAlt className="me-2" /> Delete
+                        </Button>
+                      </OverlayTrigger>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))
+          : Array(6)
+              .fill(0)
+              .map((_, index) => (
+                <Col md={6} lg={4} className="mb-4" key={index}>
+                  <Card className="lesson-card shadow-sm h-100">
+                    <Card.Body>
+                      <Skeleton height={30} width={`60%`} className="mb-2" />
+                      <Skeleton count={3} />
+                      <div className="d-flex justify-content-between mt-3">
+                        <Skeleton width={80} height={30} />
+                        <Skeleton width={80} height={30} />
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))}
       </Row>
+      {/* Modals for edit, add, and delete lesson */}
+      {/* Add your modals here */}
 
       {/* Delete Confirmation Modal */}
       <Modal

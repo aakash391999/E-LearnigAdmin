@@ -12,7 +12,7 @@ export function getAllCities(data) {
 export function loginUSer(data) {
   return apiPost(urls.LOGIN, data);
 }
-export function getAllCourses(query="") {
+export function getAllCourses(query = "") {
   return apiGet(urls.ALL_COURSES + query);
 }
 export function addNewCourse(data) {
@@ -24,4 +24,8 @@ export function updateCourse(data, id) {
 
 export function deleteCourse(id) {
   return apiDelete(`${urls.UPDATE_COURSE}/${id}`);
+}
+
+export function addNewLession(data) {
+  return apiPost(urls.ADD_LESSION, data);
 }
