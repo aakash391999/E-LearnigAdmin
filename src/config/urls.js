@@ -9,6 +9,8 @@ export const ALL_COURSES = getApiUrl("courses");
 export const ADD_COURSE = getApiUrl("admin/courses");
 export const UPDATE_COURSE = getApiUrl("admin/courses");
 export const ADD_LESSION = getApiUrl("lessons");
+export const GET_COURSE_LESSIONS = getApiUrl("lessons/course");
+
 
 // public apis
 export const GET_ALL_STATES =

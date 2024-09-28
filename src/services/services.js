@@ -29,3 +29,16 @@ export function deleteCourse(id) {
 export function addNewLession(data) {
   return apiPost(urls.ADD_LESSION, data);
 }
+export function getCourseLesions(id) {
+  return apiGet(`${urls.GET_COURSE_LESSIONS}/${id}`);
+}
+export function updateLesission(id, data) {
+  return apiPut(`${urls.ADD_LESSION}/${id}`, data);
+}
+
+export function getLesionsById(id) {
+  return apiGet(`${urls.ADD_LESSION}/${id}`);
+}
+
+
+

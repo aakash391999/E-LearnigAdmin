@@ -13,7 +13,11 @@ import {
 import { FaBook, FaEdit, FaTrashAlt, FaPlusCircle } from "react-icons/fa"; // React Icons
 import "./Lessions.module.css"; // Custom CSS for hover effects
 import { Link, useParams } from "react-router-dom";
-import { addNewLession, getAllCourses } from "../../services/services";
+import {
+  addNewLession,
+  getAllCourses,
+  getCourseLesions,
+} from "../../services/services";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 const { GoogleGenerativeAI } = require("@google/generative-ai");
@@ -121,7 +125,7 @@ const Lessions = () => {
 
       const result =
         await model.generateContent(`Could you provide an array of lessons in ${res.title}, where each lesson contains a title and a description? js array perfect key value pair like   {
-          "id":1
+          "_id":1
           "title": "Introduction to HTML",
           "description": "Learn the basic structure of an HTML document, including tags, elements, and attributes."
         }, please don't skip any single concept`);
@@ -149,11 +153,25 @@ const Lessions = () => {
     }
   };
 
-  useEffect(() => {
-    if (!hasFetchedData.current) {
-      getCourses();
-      hasFetchedData.current = true;
+  const getLesionsFromDataBase = async () => {
+    try {
+      const res = await getCourseLesions(id);
+      if (res.length > 0) {
+        setcourseData(res);
+      } else if (!hasFetchedData.current) {
+        getCourses();
+        hasFetchedData.current = true;
+      }
+    } catch (err) {
+      if (!hasFetchedData.current) {
+        getCourses();
+        hasFetchedData.current = true;
+      }
     }
+  };
+
+  useEffect(() => {
+    getLesionsFromDataBase();
   }, []);
 
   return (
@@ -174,10 +192,10 @@ const Lessions = () => {
       <Row>
         {courseData.length > 0
           ? courseData.map((lesson, index) => (
-              <Col md={6} lg={4} className="mb-4" key={lesson.id}>
+              <Col md={6} lg={4} className="mb-4" key={lesson._id}>
                 <Card className="lesson-card shadow-sm h-100">
                   <Card.Body>
-                    <Link to={`/dashboard/LessonDetails/${lesson.description}`}>
+                    <Link style={{textDecoration:"none"}} to={`/dashboard/LessonDetails/${lesson._id}`}>
                       <Card.Title>
                         <FaBook className="me-2 text-primary" />
                         {lesson.title}
